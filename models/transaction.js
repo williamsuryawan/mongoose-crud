@@ -2,14 +2,18 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const transactionSchema = new Schema ({
-    member: {type: Schema.Types.ObjectId, ref: 'Member'},
+    member: {type: Schema.Types.ObjectId, ref: 'Member', required: [true, "member can't be empty"]},
     in_date: {type: Date, default: null},
     out_date: {type: Date},
-    due_date: {type: Date},
+    due_date: {
+        type: Date, 
+        required: [true, "due date can't be empty"]
+    },
     fine: {type: Number, default: 0},
     booklist: [{
         type: Schema.Types.ObjectId,
-        ref: 'Book'
+        ref: 'Book',
+        required: [true, "bookId can't be empty"]
     }]
 })
 
