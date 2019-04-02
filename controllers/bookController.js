@@ -2,12 +2,27 @@ const Book = require('../models/book.js')
 
 class BookController {
     static async create(req,res) {
+        console.log("Masuk sini", req.body)
         let newBook = await Book.create(req.body)
         res.status(201).json(newBook)
     }
 
     static async findAll(req,res) {
-        let books = await Book.findAll({});
+        console.log("masuk search", req.query)
+        let findMe= {}
+        if(req.query.q) {
+            findMe = {
+                $or: [{title:{
+                  $regex: '.*' + req.query.q + '.*',
+                  $options: "i"
+                 }},{author: {
+                  $regex: '.*' + req.query.q + '.*',
+                  $options: "i"
+                }}]
+            }
+        }
+    
+        let books = await Book.find(findMe);
         res.status(200).json(books)
     }
 
@@ -22,7 +37,7 @@ class BookController {
         
     }
 
-    static async delete(res,res) {
+    static async delete(req,res) {
         console.log("masuk ke delete book", req.params)
         try {
             let foundBook = await Book.findOne({_id: req.params.id})

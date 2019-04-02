@@ -8,10 +8,17 @@ const memberSchema = new Schema ({
     email: {
         type: String,
         validate: [{
+            validator: function (value) {
+                var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+                return emailRegex.test(value); // Assuming email has a text attribute
+            },
+            message: props => 'Email in wrong format'
+        },{
             isAsync: true,
             validator: function (value, cb) {
-                User.find({email: value}, function (err, users) {
-                    if(users.length > 0) {
+                Member.find({email: value}, function (err, members) {
+                    // console.log("masuk validator email", value, members)
+                    if(members.length > 0) {
                         cb(false)
                     } else {
                         cb(true)

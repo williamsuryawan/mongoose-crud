@@ -2,14 +2,15 @@ const Member = require('../models/member.js');
 
 class MemberController {
     static async create(req,res) {
+        console.log("masuk method create member", req.body)
         try {
             let newMember = await Member.create(req.body)
             res.status(201).json(newMember);
         } catch (err) {
             console.log("Terjadi error", err.errors)
-            if (err.erros.email) {
+            if (err.errors.email) {
                 res.status(409).json(err);
-            } else if(err.error.password) {
+            } else if(err.errors.phone) {
                 res.status(409).json(err);
             } else {
                 res.status(500).json(err);
@@ -18,7 +19,7 @@ class MemberController {
     }
 
     static async findAll(req,res) {
-        let members = await Member.findAll({});
+        let members = await Member.find({});
         res.status(200).json(members)
     }
 
@@ -30,11 +31,10 @@ class MemberController {
         } catch (err) {
             // console.log
             res.status(500).json(err.message)
-        }
-        
+        } 
     }
 
-    static async delete(res,res) {
+    static async delete(req,res) {
         console.log("masuk ke delete member", req.params)
         try {
             let foundMember = await Member.findOne({_id: req.params.id})
